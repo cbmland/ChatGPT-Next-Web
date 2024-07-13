@@ -105,7 +105,7 @@ export const useAppConfig = createPersistStore(
   { ...DEFAULT_CONFIG },
   (set, get) => ({
     reset() {
-      //set(() => ({ ...DEFAULT_CONFIG }));
+      set(() => ({ ...DEFAULT_CONFIG }));
     },
 
     mergeModels(newModels: LLMModel[]) {

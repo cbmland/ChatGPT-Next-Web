@@ -137,12 +137,9 @@ export function setLocalAppState(appState: AppState) {
 export function mergeAppState(localState: AppState, remoteState: AppState) {
   Object.keys(localState).forEach(<T extends keyof AppState>(k: string) => {
     const key = k as T;
-    //if(k !== ''){
-    console.log("mergeAppState", k);
     const localStoreState = localState[key];
     const remoteStoreState = remoteState[key];
     MergeStates[key](localStoreState, remoteStoreState);
-    //}
   });
 
   return localState;
