@@ -170,6 +170,7 @@ export class ClientApi {
 
 export function getHeaders() {
   const accessStore = useAccessStore.getState();
+  console.log("===== accessStore", accessStore);
   const chatStore = useChatStore.getState();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -247,7 +248,7 @@ export function getHeaders() {
       ACCESS_CODE_PREFIX + accessStore.accessCode,
     );
   }
-
+  console.log("API accessStore.accessCode", accessStore.accessCode);
   return headers;
 }
 

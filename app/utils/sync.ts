@@ -119,14 +119,12 @@ const MergeStates: StateMerger = {
 };
 
 export function getLocalAppState() {
-  const accessStore = useAccessStore();
   const appState = Object.fromEntries(
     Object.entries(LocalStateGetters).map(([key, getter]) => {
       return [key, getter()];
     }),
   ) as AppState;
 
-  appState["access-control"].accessCode = accessStore.accessCode
   return appState;
 }
 
@@ -140,10 +138,10 @@ export function mergeAppState(localState: AppState, remoteState: AppState) {
   Object.keys(localState).forEach(<T extends keyof AppState>(k: string) => {
     const key = k as T;
     //if(k !== ''){
-    console.log('mergeAppState',k)
-      const localStoreState = localState[key];
-      const remoteStoreState = remoteState[key];
-      MergeStates[key](localStoreState, remoteStoreState);
+    console.log("mergeAppState", k);
+    const localStoreState = localState[key];
+    const remoteStoreState = remoteState[key];
+    MergeStates[key](localStoreState, remoteStoreState);
     //}
   });
 

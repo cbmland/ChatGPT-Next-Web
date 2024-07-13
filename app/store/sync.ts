@@ -2,6 +2,7 @@ import { getClientConfig } from "../config/client";
 import { Updater } from "../typing";
 import { ApiPath, STORAGE_KEY, StoreKey } from "../constant";
 import { createPersistStore } from "../utils/store";
+import { useAccessStore } from "../store";
 import {
   AppState,
   getLocalAppState,
@@ -56,7 +57,7 @@ export const useSyncStore = createPersistStore(
     markSyncTime() {
       set({ lastSyncTime: Date.now(), lastProvider: get().provider });
     },
-    
+
     export() {
       const state = getLocalAppState();
       const datePart = isApp
@@ -89,38 +90,37 @@ export const useSyncStore = createPersistStore(
       const client = createSyncClient(provider, get());
       return client;
     },
-    
+
     async sync() {
+      const accessStore = useAccessStore.getState();
       const localState = getLocalAppState();
       const provider = get().provider;
       const config = get()[provider];
       const client = this.getClient();
-      
-      
 
-      
-      
+      console.log("===== accessStore", accessStore);
+
       try {
         const remoteState = await client.get(config.username);
         if (!remoteState || remoteState === "") {
           await client.set(config.username, JSON.stringify(localState));
-          console.log("[Sync] Remote state is empty, using local state instead.");
-          return
+          console.log(
+            "[Sync] Remote state is empty, using local state instead.",
+          );
+          return;
         } else {
-          const parsedRemoteState = JSON.parse(
-            await client.get(config.username),
-          ) as AppState;
+          let parsedRemoteState = JSON.parse(await client.get(config.username));
+          parsedRemoteState["access-control"] = accessStore;
+          console.log("parsedRemoteState------", parsedRemoteState);
           mergeAppState(localState, parsedRemoteState);
           setLocalAppState(localState);
-       } 
+        }
       } catch (e) {
         console.log("[Sync] failed to get remote state", e);
         throw e;
       }
 
       await client.set(config.username, JSON.stringify(localState));
-
-      
 
       this.markSyncTime();
     },
