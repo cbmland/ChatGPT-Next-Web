@@ -14,7 +14,7 @@ import { showToast } from "../components/ui-lib";
 import Locale from "../locales";
 import { createSyncClient, ProviderType } from "../utils/cloud";
 import { corsPath } from "../utils/cors";
-
+import { useAccessStore } from "../store";
 export interface WebDavConfig {
   server: string;
   username: string;
@@ -95,9 +95,11 @@ export const useSyncStore = createPersistStore(
       const provider = get().provider;
       const config = get()[provider];
       const client = this.getClient();
-
+      const accessStore = useAccessStore();
       
 
+      localState["access-control"].accessCode = accessStore.accessCode
+      
       try {
         const remoteState = await client.get(config.username);
         if (!remoteState || remoteState === "") {
