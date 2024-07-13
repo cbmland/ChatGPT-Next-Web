@@ -96,7 +96,7 @@ export const useSyncStore = createPersistStore(
       const config = get()[provider];
       const client = this.getClient();
 
-      await client.set(config.username, JSON.stringify(localState));
+      
 
       try {
         const remoteState = await client.get(config.username);
@@ -115,6 +115,8 @@ export const useSyncStore = createPersistStore(
         console.log("[Sync] failed to get remote state", e);
         throw e;
       }
+
+      await client.set(config.username, JSON.stringify(localState));
 
       
 
