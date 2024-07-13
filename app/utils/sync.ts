@@ -119,12 +119,14 @@ const MergeStates: StateMerger = {
 };
 
 export function getLocalAppState() {
+  const accessStore = useAccessStore();
   const appState = Object.fromEntries(
     Object.entries(LocalStateGetters).map(([key, getter]) => {
       return [key, getter()];
     }),
   ) as AppState;
 
+  appState["access-control"].accessCode = accessStore.accessCode
   return appState;
 }
 

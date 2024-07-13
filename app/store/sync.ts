@@ -56,7 +56,7 @@ export const useSyncStore = createPersistStore(
     markSyncTime() {
       set({ lastSyncTime: Date.now(), lastProvider: get().provider });
     },
-
+    
     export() {
       const state = getLocalAppState();
       const datePart = isApp
@@ -89,16 +89,16 @@ export const useSyncStore = createPersistStore(
       const client = createSyncClient(provider, get());
       return client;
     },
-
+    
     async sync() {
       const localState = getLocalAppState();
       const provider = get().provider;
       const config = get()[provider];
       const client = this.getClient();
-      const accessStore = useAccessStore();
+      
       
 
-      localState["access-control"].accessCode = accessStore.accessCode
+      
       
       try {
         const remoteState = await client.get(config.username);
