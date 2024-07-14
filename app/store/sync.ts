@@ -92,14 +92,13 @@ export const useSyncStore = createPersistStore(
     },
 
     async sync() {
-      const accessStore = useAccessStore.getState();
+      const accessStore = useAccessStore.getState(); //to keep local access code
       const localState = getLocalAppState();
       const provider = get().provider;
       const config = get()[provider];
       const client = this.getClient();
 
       //console.log("===== accessStore", accessStore);
-
       try {
         const remoteState = await client.get(config.username);
         if (!remoteState || remoteState === "") {
@@ -111,6 +110,7 @@ export const useSyncStore = createPersistStore(
         } else {
           let parsedRemoteState = JSON.parse(await client.get(config.username));
           parsedRemoteState["access-control"] = accessStore;
+
           //console.log("parsedRemoteState------", parsedRemoteState);
           mergeAppState(localState, parsedRemoteState);
           setLocalAppState(localState);
