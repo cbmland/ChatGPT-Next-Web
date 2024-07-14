@@ -109,7 +109,7 @@ export const useSyncStore = createPersistStore(
           return;
         } else {
           let parsedRemoteState = JSON.parse(await client.get(config.username));
-          parsedRemoteState["access-control"] = accessStore;
+          parsedRemoteState[StoreKey.Access] = accessStore;
 
           //console.log("parsedRemoteState------", parsedRemoteState);
           mergeAppState(localState, parsedRemoteState);
