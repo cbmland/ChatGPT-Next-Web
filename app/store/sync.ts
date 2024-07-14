@@ -99,6 +99,7 @@ export const useSyncStore = createPersistStore(
       const client = this.getClient();
 
       //console.log("===== accessStore", accessStore);
+
       try {
         const remoteState = await client.get(config.username);
         if (!remoteState || remoteState === "") {
