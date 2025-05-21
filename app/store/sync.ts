@@ -1,6 +1,7 @@
 import { getClientConfig } from "../config/client";
 import { ApiPath, STORAGE_KEY, StoreKey } from "../constant";
 import { createPersistStore } from "../utils/store";
+import { useAccessStore } from "../store";
 import {
   AppState,
   getLocalAppState,
@@ -89,10 +90,13 @@ export const useSyncStore = createPersistStore(
     },
 
     async sync() {
+      const accessStore = useAccessStore.getState(); //to keep local access code
       const localState = getLocalAppState();
       const provider = get().provider;
       const config = get()[provider];
       const client = this.getClient();
+
+      //console.log("===== accessStore", accessStore);
 
       try {
         const remoteState = await client.get(config.username);
@@ -103,9 +107,10 @@ export const useSyncStore = createPersistStore(
           );
           return;
         } else {
-          const parsedRemoteState = JSON.parse(
-            await client.get(config.username),
-          ) as AppState;
+          let parsedRemoteState = JSON.parse(await client.get(config.username));
+          parsedRemoteState[StoreKey.Access] = accessStore;
+
+          //console.log("parsedRemoteState------", parsedRemoteState);
           mergeAppState(localState, parsedRemoteState);
           setLocalAppState(localState);
         }

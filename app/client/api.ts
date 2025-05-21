@@ -352,7 +352,6 @@ export function getHeaders(ignoreHeaders: boolean = false) {
       ACCESS_CODE_PREFIX + accessStore.accessCode,
     );
   }
-
   return headers;
 }
 
